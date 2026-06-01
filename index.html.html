@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#0a0a0a">
+<title>הרב יצחק פנגר – פודקאסט</title>
+<link rel="manifest" href="data:application/json,{&quot;name&quot;:&quot;הרב פנגר פודקאסט&quot;,&quot;short_name&quot;:&quot;פנגר&quot;,&quot;display&quot;:&quot;standalone&quot;,&quot;background_color&quot;:&quot;#0a0a0a&quot;,&quot;theme_color&quot;:&quot;#0a0a0a&quot;}">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green: #1DB954;
+  --green-dark: #158a3e;
+  --bg: #0a0a0a;
+  --bg2: #141414;
+  --bg3: #1e1e1e;
+  --border: rgba(255,255,255,0.08);
+  --text: #ffffff;
+  --text2: rgba(255,255,255,0.55);
+  --text3: rgba(255,255,255,0.25);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--text);font-family:'Heebo',sans-serif;min-height:100vh;overflow-x:hidden}
+.app{max-width:480px;margin:0 auto;padding:0 0 120px}
+
+/* Header */
+.header{padding:1.25rem 1rem 1rem;display:flex;align-items:center;gap:10px;position:sticky;top:0;background:var(--bg);z-index:10;border-bottom:0.5px solid var(--border)}
+.logo{width:38px;height:38px;border-radius:10px;background:var(--green);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.logo svg{width:20px;height:20px;fill:#000}
+.htext h1{font-size:15px;font-weight:700;color:var(--text)}
+.htext p{font-size:11px;color:var(--text2)}
+.refresh{margin-right:auto;background:none;border:0.5px solid var(--border);border-radius:20px;padding:5px 12px;font-size:12px;color:var(--text2);cursor:pointer;font-family:'Heebo',sans-serif;display:flex;align-items:center;gap:5px;transition:all .2s}
+.refresh:hover{border-color:var(--green);color:var(--green)}
+.spin{animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Player */
+.player{margin:0;background:linear-gradient(180deg,#1a2a1a 0%,var(--bg2) 100%);border-bottom:0.5px solid var(--border);padding:1rem}
+.now-label{font-size:10px;color:var(--green);font-weight:500;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+.cur-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:2px;line-height:1.4;min-height:20px}
+.cur-date{font-size:11px;color:var(--text2);margin-bottom:1rem}
+.prog-wrap{margin-bottom:.5rem}
+.prog-track{width:100%;height:3px;background:rgba(255,255,255,0.1);border-radius:2px;cursor:pointer;position:relative}
+.prog-track:hover .prog-fill{background:var(--green)}
+.prog-fill{height:100%;background:var(--green-dark);border-radius:2px;width:0%;transition:width .1s linear;pointer-events:none}
+.time-row{display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-top:5px}
+.controls{display:flex;align-items:center;justify-content:center;gap:24px;margin:1rem 0 .5rem}
+.ctrl{background:none;border:none;cursor:pointer;color:var(--text2);display:flex;align-items:center;justify-content:center;padding:6px;transition:color .15s}
+.ctrl:hover{color:var(--text)}
+.ctrl svg{width:22px;height:22px;fill:currentColor}
+.play{width:52px;height:52px;border-radius:50%;background:var(--green);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .15s,background .15s}
+.play:hover{background:var(--green-dark);transform:scale(1.05)}
+.play:active{transform:scale(0.96)}
+.play svg{width:20px;height:20px;fill:#000}
+.bottom-row{display:flex;justify-content:center}
+.spd{background:rgba(255,255,255,0.07);border:none;border-radius:20px;padding:4px 12px;font-size:12px;font-weight:500;color:var(--text2);cursor:pointer;font-family:'Heebo',sans-serif;transition:all .15s}
+.spd:hover{background:rgba(255,255,255,0.12);color:var(--text)}
+
+/* Status */
+.status{padding:.6rem 1rem;font-size:12px;color:var(--text2);display:flex;align-items:center;gap:7px}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0}
+.dot.loading{background:#f0a500;animation:pulse 1s infinite}
+.dot.err{background:#e24b4a}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.2}}
+
+/* Episodes */
+.ep-list{padding:0 .75rem;display:flex;flex-direction:column;gap:4px}
+.ep-item{background:var(--bg2);border:0.5px solid var(--border);border-radius:12px;padding:.75rem 1rem;display:flex;align-items:center;gap:10px;cursor:pointer;transition:background .15s,border-color .15s}
+.ep-item:hover{background:var(--bg3)}
+.ep-item.active{border-color:var(--green);background:rgba(29,185,84,0.07)}
+.ep-num{width:28px;height:28px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;color:var(--text2);flex-shrink:0}
+.ep-item.active .ep-num{background:var(--green);color:#000}
+.ep-info{flex:1;min-width:0}
+.ep-title{font-size:13px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px}
+.ep-date{font-size:11px;color:var(--text2)}
+.ep-arrow{color:var(--text3);flex-shrink:0;font-size:16px;transition:color .15s}
+.ep-item:hover .ep-arrow,.ep-item.active .ep-arrow{color:var(--green)}
+.empty{text-align:center;padding:3rem;color:var(--text3);font-size:13px;line-height:1.8}
+
+/* Pagination */
+.pagination{display:flex;align-items:center;justify-content:center;gap:12px;padding:1.25rem .75rem}
+.pg-btn{background:var(--bg2);border:0.5px solid var(--border);border-radius:20px;padding:7px 18px;font-size:13px;color:var(--text2);cursor:pointer;font-family:'Heebo',sans-serif;transition:all .15s}
+.pg-btn:hover:not(:disabled){border-color:var(--green);color:var(--green)}
+.pg-btn:disabled{opacity:.3;cursor:default}
+.pg-info{font-size:12px;color:var(--text3)}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="header">
+    <div class="logo">
+      <svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18A9 9 0 0 0 12 3zm0 16a7 7 0 1 1 0-14 7 7 0 0 1 0 14zm-1-9v4l3 2 1-1.5-2.5-1.5V10H11z"/></svg>
+    </div>
+    <div class="htext">
+      <h1>הרב יצחק פנגר</h1>
+      <p>פודקאסט אמת</p>
+    </div>
+    <button class="refresh" onclick="refresh()" id="refresh-btn">
+      <svg id="refresh-icon" viewBox="0 0 24 24" style="width:13px;height:13px;fill:currentColor"><path d="M17.65 6.35A7.96 7.96 0 0 0 12 4a8 8 0 1 0 8 8h-2a6 6 0 1 1-1.76-4.24l-2.24 2.24H20V4l-2.35 2.35z"/></svg>
+      רענן
+    </button>
+  </div>
+
+  <div class="player">
+    <div class="now-label">מתנגן עכשיו</div>
+    <div class="cur-title" id="cur-title">בחר פרק להאזנה</div>
+    <div class="cur-date" id="cur-date">–</div>
+    <div class="prog-wrap">
+      <div class="prog-track" id="prog-track">
+        <div class="prog-fill" id="prog-fill"></div>
+      </div>
+      <div class="time-row">
+        <span id="cur-time">0:00</span>
+        <span id="dur-time">0:00</span>
+      </div>
+    </div>
+    <div class="controls">
+      <button class="ctrl" onclick="seek(-15)" title="15 שניות אחורה">
+        <svg viewBox="0 0 24 24"><path d="M12 5V2L8 6l4 4V7a6 6 0 1 1-6 6H4a8 8 0 1 0 8-8zm-1 8V9l-3 3 3 3v-2z"/></svg>
+      </button>
+      <button class="play" id="play-btn" onclick="togglePlay()">
+        <svg id="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+      </button>
+      <button class="ctrl" onclick="seek(15)" title="15 שניות קדימה">
+        <svg viewBox="0 0 24 24"><path d="M12 5V2l4 4-4 4V7a6 6 0 1 0 6 6h2a8 8 0 1 1-8-8zm2 8V9l3 3-3 3v-2z"/></svg>
+      </button>
+    </div>
+    <div class="bottom-row">
+      <button class="spd" id="spd" onclick="changeSpeed()">מהירות: 1x</button>
+    </div>
+  </div>
+
+  <audio id="aud"></audio>
+
+  <div class="status"><span class="dot loading" id="dot"></span><span id="status-txt">טוען פרקים...</span></div>
+
+  <div class="ep-list" id="ep-list"><div class="empty">טוען...</div></div>
+
+  <div class="pagination">
+    <button class="pg-btn" id="prev-btn" onclick="loadPage(currentPage-1)" disabled>הקודם</button>
+    <span class="pg-info" id="pg-info"></span>
+    <button class="pg-btn" id="next-btn" onclick="loadPage(currentPage+1)" disabled>הבא</button>
+  </div>
+
+</div>
+
+<script>
+const API = 'https://www.emess.co.il/wp-json/custom/v1/aryo_and_posts_by_maguish_divided/1398';
+const PER = 20;
+let episodes = [], currentPage = 1, totalPages = 1, currentIdx = -1, currentPageAtLoad = 1;
+let speeds = [1, 1.25, 1.5, 2], spdIdx = 0;
+const aud = document.getElementById('aud');
+
+function fmt(s) {
+  if (!s || isNaN(s)) return '0:00';
+  const m = Math.floor(s / 60), sec = Math.floor(s % 60);
+  return m + ':' + (sec < 10 ? '0' : '') + sec;
+}
+
+function setStatus(msg, type) {
+  document.getElementById('status-txt').textContent = msg;
+  const d = document.getElementById('dot');
+  d.className = 'dot' + (type === 'loading' ? ' loading' : type === 'err' ? ' err' : '');
+}
+
+async function loadPage(pg) {
+  if (pg < 1 || (totalPages > 0 && pg > totalPages)) return;
+  currentPage = pg;
+  currentIdx = -1;
+  setStatus('טוען פרקים...', 'loading');
+  document.getElementById('ep-list').innerHTML = '<div class="empty">טוען...</div>';
+  const icon = document.getElementById('refresh-icon');
+  icon.style.animation = 'spin 1s linear infinite';
+  try {
+    const res = await fetch(`${API}?per_page=${PER}&page=${pg}`);
+    if (!res.ok) throw new Error('שגיאה ' + res.status);
+    const data = await res.json();
+    const total = res.headers.get('X-WP-TotalPages');
+    if (total) totalPages = parseInt(total);
+    episodes = data.posts || data || [];
+    const totalEps = data.total || (episodes.length + (pg - 1) * PER);
+    setStatus(`${totalEps} פרקים • עמוד ${pg} מתוך ${totalPages}`, 'ok');
+    currentPageAtLoad = pg;
+    render();
+  } catch (e) {
+    setStatus('שגיאה בטעינה: ' + e.message, 'err');
+    document.getElementById('ep-list').innerHTML = '<div class="empty">לא ניתן לטעון.<br>בדוק חיבור לאינטרנט ונסה לרענן.</div>';
+  }
+  icon.style.animation = '';
+  document.getElementById('prev-btn').disabled = pg <= 1;
+  document.getElementById('next-btn').disabled = pg >= totalPages;
+  document.getElementById('pg-info').textContent = pg + ' / ' + totalPages;
+}
+
+function render() {
+  const list = document.getElementById('ep-list');
+  if (!episodes.length) { list.innerHTML = '<div class="empty">אין פרקים</div>'; return; }
+  list.innerHTML = episodes.map((ep, i) => {
+    const title = ep.post_title || ep.title || 'פרק ללא שם';
+    const dateRaw = ep.post_date || ep.date || '';
+    const date = dateRaw ? new Date(dateRaw).toLocaleDateString('he-IL') : '';
+    const num = (currentPage - 1) * PER + i + 1;
+    const active = currentIdx === i && currentPageAtLoad === currentPage;
+    return `<div class="ep-item${active ? ' active' : ''}" onclick="loadEp(${i})">
+      <div class="ep-num">${active ? '▶' : num}</div>
+      <div class="ep-info">
+        <div class="ep-title">${title}</div>
+        <div class="ep-date">${date}</div>
+      </div>
+      <span class="ep-arrow">›</span>
+    </div>`;
+  }).join('');
+}
+
+function loadEp(i) {
+  const ep = episodes[i];
+  const url = ep.audio_url || ep.file || ep.guid || ep.link || '';
+  if (!url) { alert('לא נמצא קישור אודיו לפרק זה'); return; }
+  currentIdx = i;
+  currentPageAtLoad = currentPage;
+  const title = ep.post_title || ep.title || 'פרק';
+  const dateRaw = ep.post_date || ep.date || '';
+  const date = dateRaw ? new Date(dateRaw).toLocaleDateString('he-IL') : '';
+  document.getElementById('cur-title').textContent = title;
+  document.getElementById('cur-date').textContent = date;
+  aud.src = url;
+  aud.play();
+  document.getElementById('play-icon').innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+  render();
+}
+
+function togglePlay() {
+  if (!aud.src || aud.src === location.href) return;
+  if (aud.paused) {
+    aud.play();
+    document.getElementById('play-icon').innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+  } else {
+    aud.pause();
+    document.getElementById('play-icon').innerHTML = '<path d="M8 5v14l11-7z"/>';
+  }
+}
+
+function seek(s) { aud.currentTime = Math.max(0, (aud.currentTime || 0) + s); }
+
+function changeSpeed() {
+  spdIdx = (spdIdx + 1) % speeds.length;
+  aud.playbackRate = speeds[spdIdx];
+  document.getElementById('spd').textContent = 'מהירות: ' + speeds[spdIdx] + 'x';
+}
+
+function refresh() { loadPage(currentPage); }
+
+aud.addEventListener('timeupdate', () => {
+  const pct = aud.duration ? ((aud.currentTime / aud.duration) * 100) : 0;
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('cur-time').textContent = fmt(aud.currentTime);
+  document.getElementById('dur-time').textContent = fmt(aud.duration);
+});
+
+aud.addEventListener('ended', () => {
+  document.getElementById('play-icon').innerHTML = '<path d="M8 5v14l11-7z"/>';
+  if (currentIdx < episodes.length - 1) loadEp(currentIdx + 1);
+});
+
+document.getElementById('prog-track').addEventListener('click', function(e) {
+  if (!aud.duration) return;
+  const r = this.getBoundingClientRect();
+  aud.currentTime = ((e.clientX - r.left) / r.width) * aud.duration;
+});
+
+loadPage(1);
+</script>
+</body>
+</html>
